@@ -41,20 +41,13 @@ video.start()
 select.select((video,), (), ())
 
 # The rest is easy :-)
-#image_data = video.read()
 image_data = video.read_and_queue()
 video.close()
 
 image = Image.fromstring("RGB", (size_x, size_y), image_data, "raw", "BGR")
-#ar = numpy.frombuffer(image_data,dtype=numpy.uint8)
-#frame = cv2.imdecode(ar,cv2.cv.CV_LOAD_IMAGE_COLOR)
-print image.size
-#print frame
-
-#print(numpy.array(image))
 
 cv2.imshow('image',numpy.array(image))
-#cv2.imshow('frame', frame)
+
 cv2.waitKey(0)
 image.save("image.jpg")
 print "Saved image.jpg (Size: " + str(size_x) + " x " + str(size_y) + ")"
