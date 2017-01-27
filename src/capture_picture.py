@@ -17,6 +17,8 @@ import select
 import v4l2capture
 import cv2
 import numpy
+import time
+import grip
 
 # Open the video device.
 video = v4l2capture.Video_device("/dev/video0")
@@ -37,6 +39,8 @@ video.queue_all_buffers()
 # Start the device. This lights the LED if it's a camera that has one.
 video.start()
 
+gp = grip.GripPipeline()
+print "starting"
 
 while True:
 	# Wait for the device to fill the buffer.
@@ -47,7 +51,9 @@ while True:
 
 	image = Image.fromstring("RGB", (size_x, size_y), image_data, "raw", "BGR")
 
-	cv2.imshow('image',numpy.array(image))
+	im_array = numpy.array(image)
+
+	cv2.imshow('image',gp.process(im_array))
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
