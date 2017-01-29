@@ -1,0 +1,12 @@
+# 1. start gstreamer to capture video from USB camera and output to video stream
+gst-launch -e v4l2src device=/dev/video0 ! 'video/x-raw-yuv,width=(int)1280,height=(int)720,framerate=30/1' ! nv_omx_h264enc low-latency=1 ! rtph264pay config-interval=10 pt=96 ! udpsink host=127.0.0.1 port=5000
+
+# 2. view stream in vlc by running the following command to open video.sdp
+vlc video.sdp
+
+# video.sdp is a text file that contains the following without these comments
+# v=0
+# m=video 5000 RTP/AVP 96
+# c=IN IP4 127.0.0.1
+# a=rtpmap:96 H264/90000
+
