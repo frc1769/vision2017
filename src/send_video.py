@@ -44,12 +44,12 @@ video = v4l2capture.Video_device("/dev/video0")
 
 # Suggest an image size to the device. The device may choose and
 # return another size if it doesn't support the suggested one.
-size_x, size_y = video.set_format(640, 480)
+size_x, size_y = video.set_format(320, 240)
 
 # Create a buffer to store image data in. This must be done before
 # calling 'start' if v4l2capture is compiled with libv4l2. Otherwise
 # raises IOError.
-video.create_buffers(2)
+video.create_buffers(30)
 
 # Send the buffer to the device. Some devices require this to be done
 # before calling 'start'.
@@ -68,15 +68,16 @@ while True:
 	# The rest is easy :-)
 	image_data = video.read_and_queue()
 
-	image = Image.fromstring("RGB", (size_x, size_y), image_data, "raw", "BGR")
-	imagedata2 = image.tostring()
-	sys.stdout.write( imagedata2 )
+	#image = Image.fromstring("RGB", (size_x, size_y), image_data, "raw", "BGR")
+	#imagedata2 = image.tostring()
+	#print repr(imagedata2)
+	sys.stdout.write( image_data )
 
-	im_array = numpy.array(image)
+	#im_array = numpy.array(image)
 
-	cv2.imshow('image',gp.process(im_array))
+	#cv2.imshow('image',im_array)
 
-	ret, jpeg = cv2.imencode('.jpg', im_array)
+	#ret, jpeg = cv2.imencode('.jpg', im_array)
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break

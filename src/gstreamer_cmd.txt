@@ -10,3 +10,8 @@ vlc video.sdp
 # c=IN IP4 127.0.0.1
 # a=rtpmap:96 H264/90000
 
+
+Alternate command for taking data from python:
+
+python send_video.py | gst-launch fdsrc fd=0 ! videoparse width=320 height=240 framerate=30/1 format=14 ! autovideoconvert ! nv_omx_h264enc low-latency=1 ! rtph264pay config-interval=10 pt=96 ! udpsink host=localhost port=5000
+
