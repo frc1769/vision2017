@@ -22,7 +22,7 @@ class GripPipeline:
         self.__hsv_threshold_input = self.cv_resize_output
         self.__hsv_threshold_hue = [0, 255]
         self.__hsv_threshold_saturation = [0.0, 255]
-        self.__hsv_threshold_value = [210.97122302158272, 255.0]
+        self.__hsv_threshold_value = [0, 255.0]
 
         self.hsv_threshold_output = None
 
@@ -81,7 +81,7 @@ class GripPipeline:
         #self.__find_lines_input = self.mask_output
         #(self.find_lines_output) = self.__find_lines(self.__find_lines_input)
 
-        return self.cv_erode_output
+        return self.cv_resize_output
 
 
     @staticmethod

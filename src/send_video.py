@@ -19,32 +19,14 @@ import cv2
 import numpy
 import time
 import grip
-from flask import Flask, render_template, Response
 import sys
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-def gen(camera):
-    while True:
-        frame = camera.get_frame()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
-@app.route('/video_feed')
-def video_feed():
-    return Response(gen(VideoCamera()),
-mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Open the video device.
 video = v4l2capture.Video_device("/dev/video0")
 
 # Suggest an image size to the device. The device may choose and
 # return another size if it doesn't support the suggested one.
-size_x, size_y = video.set_format(320, 240)
+size_x, size_y = video.set_format(640, 480)
 
 # Create a buffer to store image data in. This must be done before
 # calling 'start' if v4l2capture is compiled with libv4l2. Otherwise
@@ -68,16 +50,13 @@ while True:
 	# The rest is easy :-)
 	image_data = video.read_and_queue()
 
-	#image = Image.fromstring("RGB", (size_x, size_y), image_data, "raw", "BGR")
-	#imagedata2 = image.tostring()
-	#print repr(imagedata2)
-	sys.stdout.write( image_data )
+	image = Image.fromstring("RGB", (size_x, size_y), image_data, "raw", "BGR")
 
-	#im_array = numpy.array(image)
+	im_array = numpy.array(image)
 
-	#cv2.imshow('image',im_array)
+	res = gp.process(im_array)
 
-	#ret, jpeg = cv2.imencode('.jpg', im_array)
+	sys.stdout.write( Image.fromarray(res).tostring())
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
