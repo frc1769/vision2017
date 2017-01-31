@@ -81,7 +81,7 @@ class GripPipeline:
         #self.__find_lines_input = self.mask_output
         #(self.find_lines_output) = self.__find_lines(self.__find_lines_input)
 
-        return self.cv_resize_output
+        return self.__cv_resize_src
 
 
     @staticmethod

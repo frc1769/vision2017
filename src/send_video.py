@@ -41,7 +41,7 @@ video.queue_all_buffers()
 video.start()
 
 gp = grip.GripPipeline()
-print "starting"
+#print "starting"
 
 while True:
 	# Wait for the device to fill the buffer.
@@ -62,5 +62,5 @@ while True:
 		break
 
 video.close()
-image.save("image.jpg")
-print "Saved image.jpg (Size: " + str(size_x) + " x " + str(size_y) + ")"
+#image.save("image.jpg")
+#print "Saved image.jpg (Size: " + str(size_x) + " x " + str(size_y) + ")"
