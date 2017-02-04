@@ -26,7 +26,7 @@ video = v4l2capture.Video_device("/dev/video0")
 
 # Suggest an image size to the device. The device may choose and
 # return another size if it doesn't support the suggested one.
-size_x, size_y = video.set_format(640, 480)
+size_x, size_y = video.set_format(640, 360)
 
 # Create a buffer to store image data in. This must be done before
 # calling 'start' if v4l2capture is compiled with libv4l2. Otherwise
