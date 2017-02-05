@@ -13,16 +13,16 @@ class GripPipeline:
         """
 
         self.__cv_resize_dsize = (0, 0)
-        self.__cv_resize_fx = 0.5
-        self.__cv_resize_fy = 0.5
+        self.__cv_resize_fx = 1
+        self.__cv_resize_fy = 1
         self.__cv_resize_interpolation = cv2.INTER_LINEAR
 
         self.cv_resize_output = None
 
         self.__hsv_threshold_input = self.cv_resize_output
         self.__hsv_threshold_hue = [0, 255]
-        self.__hsv_threshold_saturation = [0.0, 255]
-        self.__hsv_threshold_value = [0, 255.0]
+        self.__hsv_threshold_saturation = [0, 255]
+        self.__hsv_threshold_value = [0, 255]
 
         self.hsv_threshold_output = None
 
@@ -57,11 +57,11 @@ class GripPipeline:
         Runs the pipeline and sets all outputs to new values.
         """
         # Step CV_resize0:
-        self.__cv_resize_src = source0
-        (self.cv_resize_output) = self.__cv_resize(self.__cv_resize_src, self.__cv_resize_dsize, self.__cv_resize_fx, self.__cv_resize_fy, self.__cv_resize_interpolation)
+        #self.__cv_resize_src = source0
+        #(self.cv_resize_output) = self.__cv_resize(self.__cv_resize_src, self.__cv_resize_dsize, self.__cv_resize_fx, self.__cv_resize_fy, self.__cv_resize_interpolation)
 
         # Step HSV_Threshold0:
-        self.__hsv_threshold_input = self.cv_resize_output
+        self.__hsv_threshold_input = source0
         (self.hsv_threshold_output) = self.__hsv_threshold(self.__hsv_threshold_input, self.__hsv_threshold_hue, self.__hsv_threshold_saturation, self.__hsv_threshold_value)
 
         # Step CV_erode0:
@@ -69,8 +69,8 @@ class GripPipeline:
         (self.cv_erode_output) = self.__cv_erode(self.__cv_erode_src, self.__cv_erode_kernel, self.__cv_erode_anchor, self.__cv_erode_iterations, self.__cv_erode_bordertype, self.__cv_erode_bordervalue)
 
         # Step Mask0:
-        self.__mask_input = self.cv_resize_output
-        self.__mask_mask = self.cv_erode_output
+        self.__mask_input = source0
+        self.__mask_mask = self.hsv_threshold_output
         (self.mask_output) = self.__mask(self.__mask_input, self.__mask_mask)
 
         ## Step Find_Blobs0:
@@ -81,7 +81,7 @@ class GripPipeline:
         #self.__find_lines_input = self.mask_output
         #(self.find_lines_output) = self.__find_lines(self.__find_lines_input)
 
-        return self.__cv_resize_src
+        return self.mask_output
 
 
     @staticmethod
