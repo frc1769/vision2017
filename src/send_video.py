@@ -50,13 +50,13 @@ while True:
 	# The rest is easy :-)
 	image_data = video.read_and_queue()
 
-	image = Image.fromstring("RGB", (size_x, size_y), image_data, "raw", "BGR")
+	image = Image.frombytes("RGB", (size_x, size_y), image_data, "raw", "BGR")
 
 	im_array = numpy.array(image)
 
 	res = gp.process(im_array)
 
-	sys.stdout.write( Image.fromarray(res).tostring())
+	sys.stdout.write( Image.fromarray(res).tobytes())
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
