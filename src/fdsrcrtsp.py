@@ -25,6 +25,33 @@ from gi.repository import GObject, Gst, GstVideo, GstRtspServer
 
 Gst.init(None)
 
+video_pipeline = Gst.Pipeline.new("video_pipeline")
+
+source = Gst.ElementFactory.make("fdsrc", 'source')
+source.set_property('fd', 0)
+
+parsing = Gst.ElementFactory.make("videoparse", "parsing")
+parsing.set_property("width",640)
+parsing.set_property("height",360)
+parsing.set_property("framerate",Gst.Fraction(30,1) )
+parsing.set_property("format",16)
+
+vc = Gst.ElementFactory.make("autovideoconvert", "vc")
+
+om = Gst.ElementFactory.make("omxh264enc", "om")
+om.set_property("low-latency", True)
+
+payl = Gst.ElementFactory.make("rtph264pay","payl")
+payl.set_property("name","pay0")
+payl.set_property("pt",96)
+
+for ele in (source, parsing, vc, om, payl):
+    video_pipeline.add(ele)
+    
+source.link(parsing)
+parsing.link(vc)
+vc.link(om)
+om.link(payl)
 
 mainloop = GObject.MainLoop()
 
@@ -33,12 +60,19 @@ server.set_service('5800')
 
 mounts = server.get_mount_points()
 
+#rtsp_media = GstRtspServer.RTSPMedia()
+#rtsp_media.take_pipeline(video_pipeline)
+
 factory = GstRtspServer.RTSPMediaFactory()
-factory.set_launch('( fdsrc fd=0 ! videoparse width=640 height=360 framerate=30/1 format=16 ! autovideoconvert ! omxh264enc tune=zerolatency ! rtph264pay name=pay0 pt=96 )')
+rtsp_media = factory.do_construct('test')
+rtsp_media.take_pipeline(video_pipeline)
+#factory.do_media_configure(rtsp_media)
+
+# factory.set_launch('( fdsrc fd=0 ! videoparse width=640 height=360 framerate=30/1 format=16 ! autovideoconvert ! omxh264enc tune=zerolatency ! rtph264pay name=pay0 pt=96 )')
 
 mounts.add_factory("/test", factory)
 
 server.attach(None)
 
-print "stream ready at rtsp://127.0.0.1:8554/test"
+print "stream ready at rtsp://server_address:5800/test"
 mainloop.run()
