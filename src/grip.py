@@ -20,9 +20,9 @@ class GripPipeline:
         self.cv_resize_output = None
 
         self.__hsv_threshold_input = self.cv_resize_output
-        self.__hsv_threshold_hue = [0, 255]
-        self.__hsv_threshold_saturation = [0, 255]
-        self.__hsv_threshold_value = [0, 255]
+        self.__hsv_threshold_hue = [136, 151]
+        self.__hsv_threshold_saturation = [72, 127]
+        self.__hsv_threshold_value = [128,255]
 
         self.hsv_threshold_output = None
 
@@ -64,9 +64,9 @@ class GripPipeline:
         self.__hsv_threshold_input = source0
         (self.hsv_threshold_output) = self.__hsv_threshold(self.__hsv_threshold_input, self.__hsv_threshold_hue, self.__hsv_threshold_saturation, self.__hsv_threshold_value)
 
-        # Step CV_erode0:
-        self.__cv_erode_src = self.hsv_threshold_output
-        (self.cv_erode_output) = self.__cv_erode(self.__cv_erode_src, self.__cv_erode_kernel, self.__cv_erode_anchor, self.__cv_erode_iterations, self.__cv_erode_bordertype, self.__cv_erode_bordervalue)
+        ## Step CV_erode0:
+        #self.__cv_erode_src = self.hsv_threshold_output
+        #(self.cv_erode_output) = self.__cv_erode(self.__cv_erode_src, self.__cv_erode_kernel, self.__cv_erode_anchor, self.__cv_erode_iterations, self.__cv_erode_bordertype, self.__cv_erode_bordervalue)
 
         # Step Mask0:
         self.__mask_input = source0
@@ -74,9 +74,9 @@ class GripPipeline:
         (self.mask_output) = self.__mask(self.__mask_input, self.__mask_mask)
 
         ## Step Find_Blobs0:
-        #self.__find_blobs_input = self.mask_output
-        #(self.find_blobs_output) = self.__find_blobs(self.__find_blobs_input, self.__find_blobs_min_area, self.__find_blobs_circularity, self.__find_blobs_dark_blobs)
-
+        self.__find_blobs_input = self.mask_output
+        (self.find_blobs_output) = self.__find_blobs(self.__find_blobs_input, self.__find_blobs_min_area, self.__find_blobs_circularity, self.__find_blobs_dark_blobs)
+        
         ## Step Find_Lines0:
         #self.__find_lines_input = self.mask_output
         #(self.find_lines_output) = self.__find_lines(self.__find_lines_input)
@@ -161,7 +161,7 @@ class GripPipeline:
         params.maxCircularity = circularity[1]
         params.filterByConvexity = False
         params.filterByInertia = False
-        detector = cv2.SimpleBlobDetector_create(params)
+        detector = cv2.SimpleBlobDetector(params)
         return detector.detect(input)
 
     class Line:
