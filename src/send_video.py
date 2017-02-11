@@ -44,7 +44,7 @@ video.start()
 gp = grip.GripPipeline()
 #print "starting"
 
-video_out = subprocess.Popen(['python', 'fdsrcrtsp.py'], stdin = subprocess.PIPE)
+video_out = subprocess.Popen(['./fdsrcrtsp.py'], stdin = subprocess.PIPE)
 
 while True:
 	# Wait for the device to fill the buffer.
@@ -59,7 +59,7 @@ while True:
 
 	res = gp.process(im_array)
 
-	video_out.communicate( Image.fromarray(res).tobytes() )
+	video_out.stdin.write( Image.fromarray(res).tobytes() )
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
