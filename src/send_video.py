@@ -44,7 +44,7 @@ video.start()
 gp = grip.GripPipeline()
 #print "starting"
 
-video_out = subprocess.Popen('python', 'fdsrcrtsp.py')
+video_out = subprocess.Popen(['python', 'fdsrcrtsp.py'], stdin = PIPE)
 
 while True:
 	# Wait for the device to fill the buffer.
