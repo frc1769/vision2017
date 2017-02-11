@@ -20,6 +20,7 @@ import numpy
 import time
 import grip
 import sys
+import subprocess
 
 # Open the video device.
 video = v4l2capture.Video_device("/dev/video0")
@@ -43,6 +44,8 @@ video.start()
 gp = grip.GripPipeline()
 #print "starting"
 
+video_out = subprocess.Popen('python', 'fdsrcrtsp.py')
+
 while True:
 	# Wait for the device to fill the buffer.
 	select.select((video,), (), ())
@@ -56,7 +59,7 @@ while True:
 
 	res = gp.process(im_array)
 
-	sys.stdout.write( Image.fromarray(res).tobytes())
+	video_out.communicate( Image.fromarray(res).tobytes() )
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
