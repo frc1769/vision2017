@@ -76,6 +76,9 @@ class GripPipeline:
         ## Step Find_Blobs0:
         self.__find_blobs_input = self.mask_output
         (self.find_blobs_output) = self.__find_blobs(self.__find_blobs_input, self.__find_blobs_min_area, self.__find_blobs_circularity, self.__find_blobs_dark_blobs)
+        #print dir(self.find_blobs_output)
+        for x in self.find_blobs_output:
+            print int(round(x.pt[0])), int(round(x.pt[1])), int(round(x.size))
         
         ## Step Find_Lines0:
         #self.__find_lines_input = self.mask_output

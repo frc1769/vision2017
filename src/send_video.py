@@ -21,6 +21,16 @@ import time
 import grip
 import sys
 import subprocess
+import threading
+import Queue
+
+running = True
+
+def video_proc():
+        while running:
+            item = video_queue.get()
+            video_out.stdin.write( Image.fromarray(item).tobytes() )
+            video_queue.task_done()
 
 # Open the video device.
 video = v4l2capture.Video_device("/dev/video0")
@@ -46,7 +56,13 @@ gp = grip.GripPipeline()
 
 video_out = subprocess.Popen(['./fdsrcrtsp.py'], stdin = subprocess.PIPE)
 
-while True:
+video_queue = Queue.Queue(maxsize = 5)
+
+thd = threading.Thread(target = video_proc)
+thd.start()
+
+try:
+    while True:
 	# Wait for the device to fill the buffer.
 	select.select((video,), (), ())
 
@@ -59,10 +75,16 @@ while True:
 
 	res = gp.process(im_array)
 
-	video_out.stdin.write( Image.fromarray(res).tobytes() )
-
+        if not video_queue.full():
+	    video_queue.put(res)
+	
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
+except KeyboardInterrupt:
+    print "ending1"
+    running = False
+    video_out.kill()
+    video_queue.put("")
 
 video.close()
 #image.save("image.jpg")
