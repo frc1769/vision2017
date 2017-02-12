@@ -60,7 +60,7 @@ video.queue_all_buffers()
 # Start the device. This lights the LED if it's a camera that has one.
 video.start()
 
-gp = grip.GripPipeline()
+gp = grip.GripPipeline(WIDTH, HEIGHT)
 #print "starting"
 
 video_out = subprocess.Popen(['./fdsrcrtsp.py'], stdin = subprocess.PIPE)
@@ -87,32 +87,13 @@ try:
         if not video_queue.full():
 	    video_queue.put(res[0])
 	    
-        points = res[1]
-        print points
-        print "]"
-        x_sum = 0
-        y_sum = 0
-        size_sum = 0
-        ct_pts = 0
-        for p in points:
-            ct_pts += 1
-            x_sum += p.pt[0]
-            y_sum += p.pt[1]
-            size_sum += p.size
-        if ct_pts:    
-            x_val = x_sum / ct_pts / WIDTH * 2 - 1
-            y_val = y_sum / ct_pts / HEIGHT * 2 - 1
-            size_val = size_sum / ct_pts / WIDTH
-            print x_val, y_val, size_val, ct_pts
-        else:
-            x_val = 0
-            y_val = 0
-            size_val = 0
+        point_data = res[1]
+        print "["
             
-        sd.putNumber('x', x_val)
-        sd.putNumber('y', y_val)
-        sd.putNumber('size', size_val)
-        sd.putNumber('count', ct_pts)
+        sd.putNumber('x', point_data[0])
+        sd.putNumber('y', point_data[1])
+        sd.putNumber('size', point_data[2])
+        sd.putNumber('count', point_data[3])
             
         print "]"
 
