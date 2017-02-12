@@ -116,7 +116,7 @@ try:
             
         print "]"
 
-        cv2.imshow('video', im_array)	
+        #cv2.imshow('video', im_array)	
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
 except KeyboardInterrupt:
