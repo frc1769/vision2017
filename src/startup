@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd /home/ubuntu/vision2017/src
+
+python send_video.py
