@@ -24,8 +24,8 @@ class GripPipeline:
 
         self.__hsv_threshold_input = self.cv_resize_output
         self.__hsv_threshold_hue = [120,150]
-        self.__hsv_threshold_saturation = [64, 255]
-        self.__hsv_threshold_value = [192,255]
+        self.__hsv_threshold_saturation = [0, 255]
+        self.__hsv_threshold_value = [145,255]
 
         self.hsv_threshold_output = None
 

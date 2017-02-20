@@ -24,12 +24,13 @@ import subprocess
 import threading
 import Queue
 from networktables import NetworkTables
+import socket
 
 HEIGHT = 360
 WIDTH = 640
 
 running = True
-#NetworkTables.initialize(server = "10.17.69.69")
+NetworkTables.initialize(server = socket.gethostbyname('roboRIO-1769-FRC.local'))
 sd = NetworkTables.getTable("CameraData")
 
 subprocess.call(['v4l2-ctl','-c', 'exposure_auto=1'])
